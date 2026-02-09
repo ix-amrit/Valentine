@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Puzzle Round</title>
+
+<style>
+
+html, body{
+margin:0;
+padding:0;
+min-height:100vh;
+overflow-x:hidden;
+background:linear-gradient(135deg,#3b0a2a,#6a0f3c,#3b0a2a);
+background-attachment:fixed;
+color:white;
+font-family:Arial;
+text-align:center;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+}
+
+input{
+padding:12px;
+font-size:16px;
+border-radius:10px;
+border:none;
+outline:none;
+}
+
+button{
+padding:10px 20px;
+border:none;
+border-radius:20px;
+background:#ff4d6d;
+color:white;
+margin-left:10px;
+cursor:pointer;
+}
+
+#msg{
+margin-top:20px;
+}
+
+</style>
+</head>
+
+<body>
+
+<h2>Round 2: Answer Carefully 😏</h2>
+<p>What is my little buddy’s name?</p>
+
+<div>
+<input id="answer" placeholder="Type here...">
+<button onclick="check()">Submit</button>
+</div>
+
+<p id="msg"></p>
+
+<script>
+function check(){
+let ans=document.getElementById("answer").value.toLowerCase();
+
+if(ans=="henry"){
+document.getElementById("msg").innerHTML="Correct. I’m impressed 😌<br>Ready for the next round?<br><br>Loading...";
+setTimeout(()=>{
+window.location.href="qr3.html";
+},2000);
+}
+else{
+document.getElementById("msg").innerHTML="Wrong answer detected.<br>Are you sure you even know me? 😏 Try again.";
+}
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Final Decision</title>
+
+<style>
+html,body{
+margin:0;
+padding:0;
+height:100%;
+overflow:hidden;
+background:linear-gradient(135deg,#3b0a2a,#6a0f3c);
+color:white;
+text-align:center;
+font-family:Arial;
+}
+
+/* Main container */
+.container{
+margin-top:25vh;
+}
+
+/* Buttons */
+button{
+padding:15px 30px;
+font-size:20px;
+border:none;
+border-radius:30px;
+cursor:pointer;
+margin:10px;
+transition:0.3s;
+}
+
+#yes{
+background:#ff4d6d;
+color:white;
+}
+
+#no{
+background:gray;
+color:white;
+position:relative;
+}
+
+/* Overlay layer */
+#overlay{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+pointer-events:none;
+}
+
+/* Heart rain */
+.heart{
+position:absolute;
+color:#ff4d6d;
+animation:fall linear forwards;
+}
+
+@keyframes fall{
+0%{transform:translateY(-10vh);opacity:1;}
+100%{transform:translateY(110vh);opacity:0;}
+}
+
+/* Message */
+.message{
+position:absolute;
+top:35%;
+width:100%;
+font-size:22px;
+font-weight:bold;
+}
+
+/* Pulse heart */
+.pulseHeart{
+position:absolute;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+font-size:90px;
+animation:pulse 1s infinite;
+}
+
+@keyframes pulse{
+0%{transform:translate(-50%,-50%) scale(1);}
+50%{transform:translate(-50%,-50%) scale(1.2);}
+100%{transform:translate(-50%,-50%) scale(1);}
+}
+
+/* Typewriter */
+.typewriter{
+position:absolute;
+top:20%;
+width:100%;
+padding:20px;
+font-size:20px;
+line-height:1.6;
+}
+
+</style>
+</head>
+<body>
+
+<div class="container">
+<h1>Will you be my Valentine? ❤️</h1>
+<button id="yes">YES ❤️</button>
+<button id="no">No</button>
+</div>
+
+<div id="overlay"></div>
+
+<audio id="bgmusic" src="music.mp3"></audio>
+
+<script>
+
+let noCount=0;
+let yesClickCount=0;
+
+let yesBtn=document.getElementById("yes");
+let noBtn=document.getElementById("no");
+let overlay=document.getElementById("overlay");
+let music=document.getElementById("bgmusic");
+
+
+// NO BUTTON LOGIC
+noBtn.onclick=function(){
+
+noCount++;
+
+// Move button first
+noBtn.style.position="absolute";
+noBtn.style.left=Math.random()*80+"%";
+noBtn.style.top=Math.random()*70+"%";
+
+// First 3 clicks → just move
+if(noCount<=3){
+return;
+}
+
+// 4th click
+if(noCount==4){
+showTemporaryNoMessage("Are you dumb or something?");
+}
+
+// 5th click
+if(noCount==5){
+showTemporaryNoMessage("Last time asking.");
+}
+
+// After 5th click → YES grows every time
+if(noCount>=5){
+let size=parseFloat(window.getComputedStyle(yesBtn).fontSize);
+yesBtn.style.fontSize=(size+6)+"px";
+}
+};
+
+
+// YES BUTTON LOGIC
+yesBtn.onclick=function(){
+
+yesClickCount++;
+
+// YES grows every click
+let size=parseFloat(window.getComputedStyle(yesBtn).fontSize);
+yesBtn.style.fontSize=(size+5)+"px";
+
+if(navigator.vibrate){
+navigator.vibrate([300,100,300]);
+}
+
+document.querySelector(".container").style.display="none";
+
+/* HEART RAIN */
+let rainInterval=setInterval(createHeart,120);
+setTimeout(()=>clearInterval(rainInterval),8000);
+
+
+/* MESSAGE 1 - 3 seconds */
+showMessage("Smart choice. Extremely attractive decision making 😌");
+setTimeout(()=>removeMessage(),3000);
+
+
+/* MESSAGE 2 - 3 seconds */
+setTimeout(()=>{
+showMessage("I knew you wouldn’t disappoint me.");
+},3000);
+
+setTimeout(()=>{
+removeMessage();
+},6000);
+
+
+/* AFTER 6 seconds → START MUSIC + HEART */
+setTimeout(()=>{
+let pulse=document.createElement("div");
+pulse.className="pulseHeart";
+pulse.innerHTML="❤️";
+overlay.appendChild(pulse);
+music.play();
+},6000);
+
+
+/* AFTER 2 MINUTES → REMOVE HEART + SHOW FINAL */
+setTimeout(()=>{
+overlay.innerHTML="";
+showFinalMessage();
+},120000);
+
+};
+
+
+// NO BUTTON TEMP MESSAGE
+function showTemporaryNoMessage(text){
+let msg=document.createElement("div");
+msg.style.position="fixed";
+msg.style.top="20%";
+msg.style.width="100%";
+msg.style.fontSize="20px";
+msg.style.fontWeight="bold";
+msg.innerHTML=text;
+overlay.appendChild(msg);
+
+setTimeout(()=>msg.remove(),2000);
+}
+
+function createHeart(){
+let heart=document.createElement("div");
+heart.className="heart";
+heart.innerHTML="❤️";
+heart.style.left=Math.random()*100+"%";
+heart.style.fontSize=(Math.random()*20+15)+"px";
+heart.style.animationDuration=(Math.random()*3+3)+"s";
+overlay.appendChild(heart);
+setTimeout(()=>heart.remove(),6000);
+}
+
+
+function showMessage(text){
+let msg=document.createElement("div");
+msg.className="message";
+msg.id="activeMessage";
+msg.innerHTML=text;
+overlay.appendChild(msg);
+}
+
+function removeMessage(){
+let msg=document.getElementById("activeMessage");
+if(msg) msg.remove();
+}
+
+
+function showFinalMessage(){
+
+overlay.innerHTML="";
+
+overlay.style.pointerEvents="auto";
+overlay.style.overflowY="auto";
+
+let box=document.createElement("div");
+box.className="typewriter";
+box.style.paddingBottom="100px";
+overlay.appendChild(box);
+
+let message=[
+"Wait...",
+"",
+"Something isn’t right.",
+"",
+"You placed the heart...",
+"But not where it truly belongs.",
+"",
+"Look again.",
+"",
+"The right place is waiting.",
+"",
+"Find it.",
+"Place it carefully.",
+"",
+"Because when you do...",
+"You’ll unlock the final piece of me.",
+"",
+"And next time...",
+"Don’t challenge my love again. 😌❤️"
+];
+
+let i=0;
+let j=0;
+
+function type(){
+if(i<message.length){
+if(j<message[i].length){
+box.innerHTML+=message[i].charAt(j);
+j++;
+setTimeout(type,60);
+}else{
+box.innerHTML+="<br>";
+i++;
+j=0;
+setTimeout(type,700);
+}
+}
+}
+
+type();
+}
+
+</script>
+
+</body>
+</html>

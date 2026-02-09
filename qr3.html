@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ONE AND ONLY</title>
+
+<style>
+body{
+margin:0;
+overflow:hidden;
+background:#140014;
+color:white;
+font-family:Arial;
+text-align:center;
+}
+
+h2{
+margin-top:20px;
+}
+
+.balloon{
+position:absolute;
+width:65px;
+height:65px;
+border-radius:50%;
+background:maroon;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:24px;
+cursor:pointer;
+color:white;
+transition:0.4s;
+box-shadow:0 0 10px rgba(255,0,80,0.5);
+}
+
+.gold{
+background:linear-gradient(to top, gold 0%, gold 50%, maroon 50%);
+background-size:100% 200%;
+animation:fillGold 1s forwards;
+color:black;
+}
+
+@keyframes fillGold{
+0%{background-position:0% 100%;}
+100%{background-position:0% 0%;}
+}
+
+.pop{
+animation:pop 0.3s forwards;
+}
+
+@keyframes pop{
+0%{transform:scale(1);}
+100%{transform:scale(0);}
+}
+
+.spark{
+position:absolute;
+width:8px;
+height:8px;
+background:gold;
+border-radius:50%;
+animation:sparkle 1s forwards;
+}
+
+@keyframes sparkle{
+0%{opacity:1;}
+100%{transform:translateY(-50px);opacity:0;}
+}
+
+.bgHeart{
+position:absolute;
+color:#ff4d6d;
+opacity:0.2;
+animation:float 6s linear infinite;
+}
+
+@keyframes float{
+0%{transform:translateY(100vh);}
+100%{transform:translateY(-10vh);}
+}
+
+</style>
+</head>
+<body>
+
+<h2>ONE AND ONLY <br>(you may call it narcissism 😌)</h2>
+<p>Select all letters of my name.</p>
+
+<script>
+
+let name="AMRIT";
+let selected=[];
+let balloons=[];
+let extraLetters="BCDEFGHJKLMNOPQSUWXYZ";
+
+function createHeartLayout(){
+
+let heartPoints=[
+[0,-40],[-30,-60],[-60,-40],[-70,-10],[-60,20],[-30,50],[0,70],[30,50],[60,20],[70,-10],[60,-40],[30,-60]
+];
+
+let centerX=window.innerWidth/2;
+let centerY=window.innerHeight/2;
+
+let allLetters=name.split("");
+
+for(let i=0;i<12;i++){
+let letter;
+
+if(i<allLetters.length){
+letter=allLetters[i];
+}else{
+letter=extraLetters[Math.floor(Math.random()*extraLetters.length)];
+}
+
+createBalloon(letter,
+centerX+heartPoints[i][0],
+centerY+heartPoints[i][1]);
+}
+}
+
+function createBalloon(letter,x,y){
+let div=document.createElement("div");
+div.className="balloon";
+div.innerHTML=letter;
+
+div.x=x;
+div.y=y;
+div.dx=(Math.random()*2)-1;
+div.dy=(Math.random()*2)-1;
+
+div.style.left=x+"px";
+div.style.top=y+"px";
+
+div.onclick=function(){
+if(name.includes(letter) && !selected.includes(letter)){
+selected.push(letter);
+div.classList.add("gold");
+sparkEffect(div.x,div.y);
+
+if(selected.length===name.length){
+setTimeout(()=>{
+alert("You unlocked the ONE AND ONLY ❤️\nFinal QR is hidden in the secret bottom compartment.");
+},800);
+}
+}else{
+div.classList.add("pop");
+setTimeout(()=>div.remove(),300);
+}
+};
+
+document.body.appendChild(div);
+balloons.push(div);
+}
+
+function animate(){
+balloons.forEach(b=>{
+b.x+=b.dx;
+b.y+=b.dy;
+
+if(b.x<=0 || b.x>=window.innerWidth-65) b.dx*=-1;
+if(b.y<=0 || b.y>=window.innerHeight-65) b.dy*=-1;
+
+b.style.left=b.x+"px";
+b.style.top=b.y+"px";
+});
+requestAnimationFrame(animate);
+}
+
+function sparkEffect(x,y){
+for(let i=0;i<10;i++){
+let s=document.createElement("div");
+s.className="spark";
+s.style.left=x+30+"px";
+s.style.top=y+30+"px";
+document.body.appendChild(s);
+setTimeout(()=>s.remove(),1000);
+}
+}
+
+function floatingHearts(){
+for(let i=0;i<6;i++){
+let h=document.createElement("div");
+h.className="bgHeart";
+h.innerHTML="❤️";
+h.style.left=Math.random()*100+"%";
+h.style.animationDuration=(Math.random()*5+5)+"s";
+document.body.appendChild(h);
+}
+}
+
+createHeartLayout();
+animate();
+floatingHearts();
+
+</script>
+
+</body>
+</html>
