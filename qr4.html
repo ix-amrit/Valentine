@@ -112,7 +112,7 @@ line-height:1.6;
 
 <div id="overlay"></div>
 
-<audio id="bgmusic" preload="auto">
+<audio id="bgmusic" preload="auto" playsinline>
   <source src="music.mp3" type="audio/mpeg">
 </audio>
 <script>
@@ -163,19 +163,33 @@ yesBtn.style.fontSize=(size+6)+"px";
 
 
 // YES BUTTON LOGIC
-yesBtn.onclick=function(){
+yesBtn.onclick = function(){
 
-yesClickCount++;
+    let music = document.getElementById("bgmusic");
 
-// YES grows every click
-let size=parseFloat(window.getComputedStyle(yesBtn).fontSize);
-yesBtn.style.fontSize=(size+5)+"px";
+    // Force load audio
+    music.load();
 
-if(navigator.vibrate){
-navigator.vibrate([300,100,300]);
-}
+    // Play immediately from tap
+    let playPromise = music.play();
 
-document.querySelector(".container").style.display="none";
+    if (playPromise !== undefined) {
+        playPromise.then(() => {
+            console.log("Music started");
+        }).catch(error => {
+            console.log("Playback blocked:", error);
+        });
+    }
+
+    if(navigator.vibrate){
+        navigator.vibrate([300,100,300]);
+    }
+
+    // Hide container AFTER music starts
+    document.querySelector(".container").style.display="none";
+
+    // Continue rest of your code here...
+};
 
 /* HEART RAIN */
 let rainInterval=setInterval(createHeart,120);
@@ -315,3 +329,4 @@ type();
 
 </body>
 </html>
+
