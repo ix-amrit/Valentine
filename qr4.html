@@ -112,8 +112,9 @@ line-height:1.6;
 
 <div id="overlay"></div>
 
-<audio id="bgmusic" src="music.mp3"></audio>
-
+<audio id="bgmusic" preload="auto">
+  <source src="music.mp3" type="audio/mpeg">
+</audio>
 <script>
 
 let noCount=0;
@@ -122,8 +123,11 @@ let yesClickCount=0;
 let yesBtn=document.getElementById("yes");
 let noBtn=document.getElementById("no");
 let overlay=document.getElementById("overlay");
-let music=document.getElementById("bgmusic");
-
+let music = document.getElementById("bgmusic");
+music.volume = 1;
+music.play().catch(function(e){
+    console.log("Autoplay blocked:", e);
+});
 
 // NO BUTTON LOGIC
 noBtn.onclick=function(){
